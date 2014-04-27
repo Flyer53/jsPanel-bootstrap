@@ -1,0 +1,195 @@
+/* Version 1.3.0 2014-04-27 08:52 */
+* {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box; /* Firefox */
+}
+.jsPanel{
+    overflow: hidden;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 0 6px rgba(0, 33, 50, 0.1), 0 7px 25px rgba(17, 38, 60, 0.4);
+}
+.jsPanel .navbar{
+    border-radius: 4px 4px 0 0;
+    cursor: move;
+    margin-bottom: 0;
+    min-height: 40px;
+}
+.jsPanel-header{
+    width: calc(100% - 70px);
+    overflow: hidden;
+}
+.jsPanel .navbar-brand{
+    float: left;
+    height: 20px;
+    line-height: 14px;
+    padding: 5px;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.jsPanel .navbar-nav > li > a {
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-left: 0;
+    padding-right: 5px;
+}
+.jsPanel-content {
+    background-color: #FFFFFF;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 12px;
+    height: calc(100% - 40px);  /* has to be adjusted according to .jsPanel-hdr height */
+    margin-bottom: 0;
+    position: relative;
+    padding: 15px;
+}
+.jsPanel-content-header{
+    height: calc(100% - 51px); /* has to be adjusted according to .jsPanel-hdr height + header toolbar */
+}
+.jsPanel-content-footer{
+    height: calc(100% - 80px);   /* has to be adjusted according to .jsPanel-hdr & footer toolbar */
+}
+.jsPanel-content-header.jsPanel-content-footer{
+    height: calc(100% - 91px);   /* has to be adjusted according to .jsPanel-hdr & header toolbar & footer toolbar  */
+}
+.ui-icon, .ui-widget-content .ui-icon {
+    background-image: url("images/ui-icons_454545_256x240.png");
+}
+.ui-icon-gripsmall-diagonal-se {
+    background-position: -81px -224px;
+}
+.jsPanel-hdr-tb span, .jsPanel-hdr-tb i {
+    cursor: pointer;
+    padding: 0 0 0 5px;
+}
+.jsPanel-ftr{
+    font-size: 12px;
+    height: 40px;
+    text-align: right;
+}
+.jsPanel-ftr button{
+    margin: 0 5px 0 0;
+}
+/* footer has always standard default styling */
+.jsPanel-ftr .navbar,
+.jsPanel-ftr .navbar-default {
+    background-color: #f8f8f8;
+    background-image: none;
+    border-color: #e7e7e7;
+    border-radius: 0;
+    padding-top: 5px;
+}
+.jsPanel-ftr .navbar-default .navbar-brand {
+    color: #777;
+}
+.jsPanel-ftr .navbar-default .navbar-brand:hover,
+.jsPanel-ftr .navbar-default .navbar-brand:focus {
+    color: #5e5e5e;
+    background-color: transparent;
+}
+.jsPanel-ftr .navbar-default .navbar-text {
+    color: #777;
+}
+.jsPanel-ftr .navbar-default .navbar-nav > li > a {
+    color: #777;
+}
+.jsPanel-ftr .navbar-default .navbar-nav > li > a:hover,
+.jsPanel-ftr .navbar-default .navbar-nav > li > a:focus {
+    color: #333;
+    background-color: transparent;
+}
+.jsPanel-ftr .navbar-default .navbar-nav > .active > a,
+.jsPanel-ftr .navbar-default .navbar-nav > .active > a:hover,
+.jsPanel-ftr .navbar-default .navbar-nav > .active > a:focus {
+    color: #555;
+    background-color: #e7e7e7;
+}
+.jsPanel-ftr .navbar-default .navbar-nav > .disabled > a,
+.jsPanel-ftr .navbar-default .navbar-nav > .disabled > a:hover,
+.jsPanel-ftr .navbar-default .navbar-nav > .disabled > a:focus {
+    color: #ccc;
+    background-color: transparent;
+}
+.jsPanel-ftr .navbar-default .navbar-toggle {
+    border-color: #ddd;
+}
+.jsPanel-ftr .navbar-default .navbar-toggle:hover,
+.jsPanel-ftr .navbar-default .navbar-toggle:focus {
+    background-color: #ddd;
+}
+.jsPanel-ftr .navbar-default .navbar-toggle .icon-bar {
+    background-color: #888;
+}
+.jsPanel-ftr .navbar-default .navbar-collapse,
+.jsPanel-ftr .navbar-default .navbar-form {
+    border-color: #e7e7e7;
+}
+.jsPanel-ftr .navbar-default .navbar-nav > .open > a,
+.jsPanel-ftr .navbar-default .navbar-nav > .open > a:hover,
+.jsPanel-ftr .navbar-default .navbar-nav > .open > a:focus {
+    color: #555;
+    background-color: #e7e7e7;
+}
+@media (max-width: 767px) {
+    .jsPanel-ftr .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: #777;
+    }
+    .jsPanel-ftr .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+    .jsPanel-ftr .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #333;
+        background-color: transparent;
+    }
+    .jsPanel-ftr .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
+    .jsPanel-ftr .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+    .jsPanel-ftr .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #555;
+        background-color: #e7e7e7;
+    }
+    .jsPanel-ftr .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a,
+    .jsPanel-ftr .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+    .jsPanel-ftr .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+        color: #ccc;
+        background-color: transparent;
+    }
+}
+.jsPanel-ftr .navbar-default .navbar-link {
+    color: #777;
+}
+.jsPanel-ftr .navbar-default .navbar-link:hover {
+    color: #333;
+}
+.jsPanel-ftr .navbar-nav.navbar-right:last-child {
+    margin-right: 0;
+}
+
+.jsPanel-content.panel-default {
+    border: none;
+}
+.jsPanel-content.panel {
+/*
+    background-color: #FFFFFF;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 0;
+*/
+}
+.jsPanel-content.panel .panel-body {
+    height: 100%;
+    padding: 0;
+}
+
+
+/* container that takes the minified jsPanels */
+#jsPanel-min-container{
+    position:fixed;
+    left:0;
+    bottom:0;
+    width:100%;
+    height:26px;
+    background:transparent;
+}

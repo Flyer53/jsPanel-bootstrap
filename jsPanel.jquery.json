@@ -1,0 +1,35 @@
+{
+    "name": "jsPanel-bootstrap",
+    "title": "jQuery jsPanel for bootstrap",
+    "description": "jQuery plugin to create highly configurable floating panels for use in backend solutions and other web applications.",
+    "keywords": [
+        "jsPanel",
+        "panel",
+        "ui",
+		"layout",
+		"popup",
+        "widget",
+        "window",
+        "bootstrap"
+    ],
+    "version": "1.0.0",
+    "author": {
+        "name": "Stefan Straesser",
+        "url": "http://stefanstraesser.eu/",
+        "email": "info@jspanel.de"
+    },
+    "licenses": [
+        {
+            "type": "GPL-3.0",
+            "url": "http://www.gnu.org/licenses/gpl.html"
+        }
+    ],
+    "homepage": "https://github.com/Flyer53/jsPanel-bootstrap",
+    "docs": "http://jspanel.de/bootstrap/api.html",
+    "demo": "http://jspanel.de/bootstrap/api.html",
+    "dependencies": {
+        "jquery": ">=1.7",
+        "jquery ui": ">=1.9",
+        "bootstrap": "3.1.1"
+    }
+}
