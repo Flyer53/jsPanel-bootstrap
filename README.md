@@ -4,9 +4,9 @@
 
 jsPanel for bootstrap is basically the same as jsPanel but **optimized for use in a bootstrap environment**. In general this means that jsPanel for bootstrap makes use of native bootstrap components in order to adapt to the used bootstrap theme.
 
-###jsPanel homepage: [http://jspanel.de](http://jspanel.de/bootstrap/)###
+###jsPanel homepage: [http://jspanel.de/bootstrap](http://jspanel.de/bootstrap/)###
 
-For a bunch of examples and the api documentation please visit [jspanel.de](http://jspanel.de/bootstrap/)
+For a bunch of examples and the api documentation please visit [jspanel.de/bootstrap](http://jspanel.de/bootstrap/)
 
 Copyright &copy; 2014 Stefan Sträßer | [stefanstraesser.eu](http://stefanstraesser.eu)
 
