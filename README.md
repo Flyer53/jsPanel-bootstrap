@@ -1,5 +1,7 @@
 ###NEWS:###
 
+**2014-04-28 jsPanel for bootstrap version 1.1.0 released** with added **option.header** to allow for a complete removal of the header section of the jsPanel giving the panel a lot more flexibility.
+
 **2014-04-27 jsPanel for bootstrap version 1.0.0 released**
 
 jsPanel for bootstrap is basically the same as jsPanel but **optimized for use in a bootstrap environment**. In general this means that jsPanel for bootstrap makes use of native bootstrap components in order to adapt to the used bootstrap theme.
@@ -18,8 +20,9 @@ Copyright &copy; 2014 Stefan Sträßer | [stefanstraesser.eu](http://stefanstrae
 | autoclose        | closeChildpanels() | onjspanelloaded  |                     |
 | content          | front()            |                  |                     |
 | draggable        | maximize()         |                  |                     |
-| id               | minimize()         |                  |                     |
-| load             | title()            |                  |                     |
+| header           | minimize()         |                  |                     |
+| id               | title()            |                  |                     |
+| load             |                    |                  |                     |
 | modal            |                    |                  |                     |
 | overflow         |                    |                  |                     |
 | position         |                    |                  |                     |

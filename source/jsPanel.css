@@ -42,19 +42,22 @@
     border-radius: 0;
     box-shadow: none;
     font-size: 12px;
-    height: calc(100% - 40px);  /* has to be adjusted according to .jsPanel-hdr height */
+    height: 100%;
     margin-bottom: 0;
     position: relative;
     padding: 15px;
 }
+.jsPanel-content-default{
+    height: calc(100% - 40px);  /* has to be adjusted according to .jsPanel-hdr height */
+}
 .jsPanel-content-header{
-    height: calc(100% - 51px); /* has to be adjusted according to .jsPanel-hdr height + header toolbar */
+    height: calc(100% - 52px); /* has to be adjusted according to .jsPanel-hdr height + header toolbar */
 }
 .jsPanel-content-footer{
     height: calc(100% - 80px);   /* has to be adjusted according to .jsPanel-hdr & footer toolbar */
 }
 .jsPanel-content-header.jsPanel-content-footer{
-    height: calc(100% - 91px);   /* has to be adjusted according to .jsPanel-hdr & header toolbar & footer toolbar  */
+    height: calc(100% - 92px);   /* has to be adjusted according to .jsPanel-hdr & header toolbar & footer toolbar  */
 }
 .ui-icon, .ui-widget-content .ui-icon {
     background-image: url("images/ui-icons_454545_256x240.png");

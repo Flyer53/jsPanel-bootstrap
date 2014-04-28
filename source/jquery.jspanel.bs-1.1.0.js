@@ -1,5 +1,5 @@
 /* jQuery Plugin jsPanel for bootstrap
-   Version: 1.0.0 2014-04-26 14:03
+   Version: 1.1.0 2014-04-28 13:58
    Dependencies:
     jQuery library ( > 1.7.0 incl. 2.1.0 )
     jQuery.UI library ( > 1.9.0 ) - (at least UI Core, Mouse, Widget, Draggable, Resizable)
@@ -20,7 +20,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-var jsPanelversion = '1.0.0 2014-04-26 14:03';
+var jsPanelversion = '1.1.0 2014-04-28 13:58';
 
 (function ( $ ) {
 
@@ -47,26 +47,26 @@ var jsPanelversion = '1.0.0 2014-04-26 14:03';
         var count = $('.jsPanel', this.first() ).length;
 
         var jsPanel = $('<div class="jsPanel normalized" style="z-index:1000;display:none;">'+
-                            '<nav class="navbar navbar-default" role="navigation">'+
-                            '<!-- Brand and toggle get grouped for better mobile display -->'+
-                            '<div class="navbar-header jsPanel-header">'+
-                                '<a class="navbar-brand jsPanel-title" href="#"></a>'+
-                            '</div>'+
-                            '<!-- Collect the nav links, forms, and other content for toggling -->'+
-                            '<div class="collapse navbar-collapse">'+
-                                '<ul class="nav navbar-nav navbar-right .jsPanel-controls">'+
-                                    '<li class="jsPanel-hdr-r-btn-min"><a   href="#"><span class="glyphicon glyphicon-minus"></span></a></li>'+
-                                    '<li class="jsPanel-hdr-r-btn-max"><a   href="#"><span class="glyphicon glyphicon-fullscreen"></span></a></li>'+
-                                    '<li class="jsPanel-hdr-r-btn-close"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></li>'+
-                                '</ul>'+
-                            '</div><!-- /.navbar-collapse -->'+
-                            '<div class="jsPanel-hdr-tb"></div><!-- extra header toolbar -->'+
+                            '<nav class="jsPanel-navbar-hdr navbar navbar-default" role="navigation">'+
+                                '<!-- Brand and toggle get grouped for better mobile display -->'+
+                                '<div class="navbar-header jsPanel-header">'+
+                                    '<a class="navbar-brand jsPanel-title" href="#"></a>'+
+                                '</div>'+
+                                '<!-- Collect the nav links, forms, and other content for toggling -->'+
+                                '<div class="collapse navbar-collapse">'+
+                                    '<ul class="nav navbar-nav navbar-right .jsPanel-controls">'+
+                                        '<li class="jsPanel-hdr-r-btn-min"><a   href="#"><span class="glyphicon glyphicon-minus"></span></a></li>'+
+                                        '<li class="jsPanel-hdr-r-btn-max"><a   href="#"><span class="glyphicon glyphicon-fullscreen"></span></a></li>'+
+                                        '<li class="jsPanel-hdr-r-btn-close"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></li>'+
+                                    '</ul>'+
+                                '</div><!-- /.navbar-collapse -->'+
+                                '<div class="jsPanel-hdr-tb"></div><!-- extra header toolbar -->'+
                             '</nav>'+
-                            '<div class="jsPanel-content panel panel-default">'+
+                            '<div class="jsPanel-content jsPanel-content-default panel panel-default">'+
                                 '<div class="panel-body"></div>'+
                             '</div>'+
                             '<div class="jsPanel-ftr" style="display:none;">'+
-                                '<nav class="navbar navbar-default" role="navigation">'+
+                                '<nav class="jsPanel-navbar-ftr navbar navbar-default" role="navigation">'+
                                     '<!-- Collect the nav links, forms, and other content for toggling -->'+
                                     '<div class="collapse navbar-collapse">'+
                                         '<ul class="nav navbar-nav navbar-right" style="width:100%;">'+
@@ -190,7 +190,7 @@ var jsPanelversion = '1.0.0 2014-04-26 14:03';
         }
 
         /* TOOLBAR im Header aktivieren | default: false */
-        if( option.toolbarHeader )
+        if( option.toolbarHeader && option.header == true )
         {
             $( '.jsPanel-content', jsPanel ).addClass( 'jsPanel-content-header' );
             $( '.jsPanel-hdr-tb', jsPanel ).css( 'display', 'block' );
@@ -204,6 +204,24 @@ var jsPanelversion = '1.0.0 2014-04-26 14:03';
             $( '.jsPanel-ftr', jsPanel ).css( { 'display':'block' } );
             // toolbar Elemente einfügen und konfigurieren
             configToolbar( option.modal, option.toolbarFooter, '.jsPanel-ftr .navbar-right', jsPanel );
+        }
+
+        /* option.header EXPERIMENTAL and */
+        if( option.header == false )
+        {
+            // remove complete header section
+            $( '.jsPanel-navbar-hdr', jsPanel ).remove();
+            // CSS corrections for various combinations of header/header toolbar and footer toolbar when header = false
+            if( !option.toolbarFooter )
+            {
+                // if no toolbarFooter is configured
+                $( '.jsPanel-content', jsPanel ).removeClass( 'jsPanel-content-default' );
+            }
+            else if( option.toolbarFooter )
+            {
+                // if toolbarFooter is configured
+                $( '.jsPanel-content', jsPanel ).removeClass( 'jsPanel-content-footer' );
+            }
         }
 
         /* font-awesome | bootstrap iconfonts einfügen wenn option.iconfont gesetzt */
@@ -813,6 +831,7 @@ var jsPanelversion = '1.0.0 2014-04-26 14:03';
         "ajax":             false,
         "autoclose":        false,
         "restoreTo":        false,
+        "header":           true,
         "position":         'auto',
         "overflow":         'hidden',
         "show":             'fadeIn',
