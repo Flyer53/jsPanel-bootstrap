@@ -1,5 +1,5 @@
 /* jQuery Plugin jsPanel for bootstrap
-   Version: 1.1.0 2014-04-28 13:58
+   Version: 1.1.1 2014-05-02 10:08
    Dependencies:
     jQuery library ( > 1.7.0 incl. 2.1.0 )
     jQuery.UI library ( > 1.9.0 ) - (at least UI Core, Mouse, Widget, Draggable, Resizable)
@@ -20,7 +20,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-var jsPanelversion = '1.1.0 2014-04-28 13:58';
+var jsPanelversion = '1.1.1 2014-05-02 10:08';
 
 (function ( $ ) {
 
@@ -86,8 +86,8 @@ var jsPanelversion = '1.1.0 2014-04-28 13:58';
         if( option.modal )
         {
             var dh = $(document ).outerHeight() + 'px',
-                backdrop = '<div class="jsPanel-backdrop" style="position:absolute;top:0;left:0;z-index:10000; width:100%;height:' + dh + ';background:rgba(0,0,0,0.9);">'+
-                           '<div class="jsPanel-backdrop-inner" style="position:absolute;top:' + $( window ).scrollTop() + 'px;width:100%;height:' + woH + 'px;"></div></div>';
+                backdrop = '<div class="jsPanel-backdrop" style="height:' + dh + ';">'+
+                           '<div class="jsPanel-backdrop-inner" style="top:' + $( window ).scrollTop() + 'px;height:' + woH + 'px;"></div></div>';
             // falls vorhanden backdrop entfernen
             $( '.jsPanel-backdrop' ).remove();
             // backdrop wieder einfügen
@@ -204,6 +204,10 @@ var jsPanelversion = '1.1.0 2014-04-28 13:58';
             $( '.jsPanel-ftr', jsPanel ).css( { 'display':'block' } );
             // toolbar Elemente einfügen und konfigurieren
             configToolbar( option.modal, option.toolbarFooter, '.jsPanel-ftr .navbar-right', jsPanel );
+        }
+        else
+        {
+            $( '.jsPanel-ftr', jsPanel ).remove();
         }
 
         /* option.header EXPERIMENTAL and */

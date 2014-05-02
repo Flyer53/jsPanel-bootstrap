@@ -172,20 +172,10 @@
 .jsPanel-content.panel-default {
     border: none;
 }
-.jsPanel-content.panel {
-/*
-    background-color: #FFFFFF;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    margin-bottom: 0;
-*/
-}
 .jsPanel-content.panel .panel-body {
     height: 100%;
     padding: 0;
 }
-
 
 /* container that takes the minified jsPanels */
 #jsPanel-min-container{
@@ -196,3 +186,18 @@
     height:26px;
     background:transparent;
 }
+
+/* css für den modal backdrop --------------------------- */
+.jsPanel-backdrop{
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:10000;
+    width:100%;
+    background:rgba(0,0,0,0.9);
+}
+.jsPanel-backdrop-inner{
+    position:absolute;
+    width:100%;
+}
+
