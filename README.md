@@ -1,6 +1,6 @@
 ###NEWS:###
 
-**2014-05-02 jsPanel for bootstrap version 1.1.1 released** - se change log.
+**2014-05-02 jsPanel for bootstrap version 1.1.1 released** - see change log.
 
 **2014-04-28 jsPanel for bootstrap version 1.1.0 released** with added **option.header** to allow for a complete removal of the header section of the jsPanel giving the panel a lot more flexibility.
 
