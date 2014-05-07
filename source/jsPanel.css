@@ -1,4 +1,4 @@
-/* Version 1.3.0 2014-04-27 08:52 */
+/* Version 1.4.0 2014-05-02 10:43 */
 * {
     box-sizing: border-box;
     -moz-box-sizing: border-box; /* Firefox */
@@ -23,7 +23,7 @@
 }
 .jsPanel .navbar-brand{
     float: left;
-    height: 20px;
+    height: 21px;
     line-height: 14px;
     padding: 5px;
     font-size: 16px;
@@ -177,6 +177,7 @@
     padding: 0;
 }
 
+
 /* container that takes the minified jsPanels */
 #jsPanel-min-container{
     position:fixed;
@@ -199,5 +200,182 @@
 .jsPanel-backdrop-inner{
     position:absolute;
     width:100%;
+}
+
+/* css für den tooltip wrapper ---------------------------- */
+.jsPanel-tooltip-wrapper{
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+.jsPanel-tooltip-wrapper .jsPanel{
+    border-radius: 4px;
+}
+
+
+/**
+ * CSS3 Tips v1.0.1
+ *
+ * A stylesheet for creating tooltips without using anything other than CSS3.
+ *
+ * created by c.bavota
+ * released under GPL v2
+ *
+ * March 21st, 2014
+ *
+ * HTML example code for the tooltip
+ * <a href="http://bavotasan.com" class="top-tip" data-tips="Go to bavotasan.com">bavotasan.com</a>
+*/
+
+[data-tips] {
+    position: relative;
+    text-decoration: none;
+}
+
+[data-tips]:after,
+[data-tips]:before {
+    position: absolute;
+    z-index: 100;
+    opacity: 0;
+}
+
+[data-tips]:after {
+    content: attr(data-tips);
+    height: 25px;
+    line-height: 25px;
+    padding: 0 10px;
+    font-size: 12px;
+    text-align: center;
+    color: #fff;
+    background: #3276B1;
+    border-radius: 4px;
+    /*text-shadow: 0 0 5px #000;*/
+    -moz-box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    white-space: nowrap;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+[data-tips]:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-width: 6px;
+    border-style: solid;
+}
+
+[data-tips]:hover:after,
+[data-tips]:hover:before {
+    opacity: 1;
+}
+
+/* Top tips */
+[data-tips].top-tip:after,
+[data-tips].top-tip:before {
+    -webkit-transition: bottom 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    -moz-transition: bottom 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    transition: bottom 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    bottom: 90%;
+    left: -9999px;
+    margin-bottom: 12px;
+}
+
+[data-tips].top-tip:before {
+    border-color: #3276B1 transparent transparent transparent;
+    margin-bottom: 0;
+}
+
+[data-tips].top-tip:hover:after,
+[data-tips].top-tip:hover:before {
+    bottom: 100%;
+    left: 0;
+}
+
+[data-tips].top-tip:hover:before {
+    left: 15px;
+}
+
+/* Bottom tip */
+[data-tips].bottom-tip:after,
+[data-tips].bottom-tip:before {
+    -webkit-transition: top 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    -moz-transition: top 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    transition: top 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    top: 90%;
+    left: -9999px;
+    margin-top: 12px;
+}
+
+[data-tips].bottom-tip:before {
+    border-color: transparent transparent #3276B1 transparent;
+    margin-top: 0;
+}
+
+[data-tips].bottom-tip:hover:after,
+[data-tips].bottom-tip:hover:before {
+    top: 100%;
+    left: 0;
+}
+
+[data-tips].bottom-tip:hover:before {
+    left: 15px;
+}
+
+/* Right tip */
+[data-tips].right-tip:after,
+[data-tips].right-tip:before {
+    -webkit-transition: left 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    -moz-transition: left 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    transition: left 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    top: -9999px;
+    left: 96%;
+    margin-left: 12px;
+}
+
+[data-tips].right-tip:before {
+    border-color: transparent #3276B1 transparent transparent;
+    margin-left: 0;
+}
+
+[data-tips].right-tip:hover:after,
+[data-tips].right-tip:hover:before {
+    left: 100%;
+    top: 0;
+}
+
+[data-tips].right-tip:hover:before {
+    top: 7px;
+}
+
+/* Left tip */
+[data-tips].left-tip:after,
+[data-tips].left-tip:before {
+    -webkit-transition: right 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    -moz-transition: right 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    transition: right 0.25s ease-in-out, opacity 0.25s ease-in-out;
+    top: -9999px;
+    right: 96%;
+    margin-right: 12px;
+}
+
+[data-tips].left-tip:before {
+    border-color: transparent transparent transparent #3276B1;
+    margin-right: 0;
+}
+
+[data-tips].left-tip:hover:after,
+[data-tips].left-tip:hover:before {
+    right: 100%;
+    top: 0;
+}
+
+[data-tips].left-tip:hover:before {
+    top: 7px;
 }
 
