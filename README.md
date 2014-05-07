@@ -1,6 +1,6 @@
 ###NEWS:###
 
-+ 2014-05-07 **jsPanel version 1.9.0 released** implementing a basic **tooltip** functionality - see change log.
++ 2014-05-07 **jsPanel-bootstrap version 1.2.0 released** implementing a basic **tooltip** functionality - see change log.
 
 ---
 
