@@ -1,5 +1,7 @@
 ###NEWS:###
 
++ 2014-05-11 **jsPanel-bootstrap version 1.2.1 released** No changes in the API, just internal code improvements.
+
 + 2014-05-07 **jsPanel-bootstrap version 1.2.0 released** implementing a basic **tooltip** functionality - see change log.
 
 ---

@@ -2,6 +2,12 @@
 
 ---
 
+### Version 1.2.1 ###
+
+Maintanance realease. No changes in the API, just internal code improvements
+
+---
+
 ### Version 1.2.0 ###
 
 + new **option.tooltip** implements a basic tooltip functionality. Tooltips can be positioned either top, right, left or bottom of the element the tooltip is applied to and offers almost all options a normal jsPanel has.

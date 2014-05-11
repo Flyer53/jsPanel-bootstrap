@@ -22,7 +22,7 @@
     overflow: hidden;
 }
 .jsPanel .navbar-brand{
-    float: left;
+    /*float: left;*/
     height: 21px;
     line-height: 14px;
     padding: 5px;
