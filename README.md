@@ -1,8 +1,8 @@
 ###NEWS:###
 
-+ 2014-05-11 **jsPanel-bootstrap version 1.2.1 released** No changes in the API, just internal code improvements.
++ 2014-05-13 **jsPanel version 1.3.0 released**: Most important change is the new **option.rtl** that adds support for RTL text direction on individual jsPanels.
 
-+ 2014-05-07 **jsPanel-bootstrap version 1.2.0 released** implementing a basic **tooltip** functionality - see change log.
++ Further changes in 1.3.0 are a bugfix in **option.modal** when a modal jsPanel is appended directly to the <code>body</code> element and overall improvements in the code base.
 
 ---
 
@@ -30,6 +30,7 @@ Copyright &copy; 2014 Stefan Sträßer | [stefanstraesser.eu](http://stefanstrae
 | position         |                    |                  |                     |
 | resizable        |                    |                  |                     |
 | restoreTo        |                    |                  |                     |
+| rtl              |                    |                  |                     |
 | show             |                    |                  |                     |
 | size             |                    |                  |                     |
 | title            |                    |                  |                     |

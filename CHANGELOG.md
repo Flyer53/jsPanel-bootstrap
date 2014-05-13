@@ -2,6 +2,16 @@
 
 ---
 
+### Version 1.3.0 ###
+
++ **New option.rtl** adds support for RTL text direction on individual jsPanels
+
++ **Bugfix in option.modal** when a modal jsPanel is appended directly to the <body> element
+
++ internal improvements in the code base
+
+---
+
 ### Version 1.2.1 ###
 
 Maintanance realease. No changes in the API, just internal code improvements

@@ -1,5 +1,5 @@
 /* jQuery Plugin jsPanel for bootstrap
-   Version: 1.2.1 2014-05-11 12:45
+   Version: 1.3.0 2014-05-13 11:00
    Dependencies:
     jQuery library ( > 1.7.0 incl. 2.1.0 )
     jQuery.UI library ( > 1.9.0 ) - (at least UI Core, Mouse, Widget, Draggable, Resizable)
@@ -20,7 +20,11 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-var jsPanelversion = '1.2.1 2014-05-11 12:45';
+var jsPanelversion = '1.3.0 2014-05-13 11:00';
+
+// + Integration of RTL text direction
+// + window properties derived through functions, not variables
+// + bugfix in option.modal when modal is appended directly to the body element
 
 (function ( $ ) {
 
@@ -32,11 +36,17 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
 
         // tagname des elements an das das jsPanel gehängt wird und window Daten
         // this is the collection on which .jsPanel() is called
-        var par = this.first()[0].tagName.toLowerCase(),
-            wsT = $( window ).scrollTop(),
-            wsL = $( window ).scrollLeft(),
-            woW = $( window ).outerWidth(),
-            woH = $( window ).outerHeight();
+        var par = this.first()[0].tagName.toLowerCase();
+
+        function winscrollTop(){
+            return $( window ).scrollTop();
+        }
+        function winscrollLeft(){
+            return $( window ).scrollLeft();
+        }
+        function winouterHeight(){
+            return $( window ).outerHeight();
+        }
 
         // Extend our default config with those provided.
         // Note that the first arg to extend is an empty object -
@@ -54,7 +64,7 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
                                 '</div>'+
                                 '<!-- Collect the nav links, forms, and other content for toggling -->'+
                                 '<div class="collapse navbar-collapse">'+
-                                    '<ul class="nav navbar-nav navbar-right .jsPanel-controls">'+
+                                    '<ul class="nav navbar-nav navbar-right jsPanel-controls">'+
                                         '<li class="jsPanel-hdr-r-btn-min"><a   href="#"><span class="glyphicon glyphicon-minus"></span></a></li>'+
                                         '<li class="jsPanel-hdr-r-btn-max"><a   href="#"><span class="glyphicon glyphicon-fullscreen"></span></a></li>'+
                                         '<li class="jsPanel-hdr-r-btn-close"><a href="#"><span class="glyphicon glyphicon-remove"></span></a></li>'+
@@ -85,9 +95,15 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
         /* option.modal  | default: false  */
         if( option.modal )
         {
+            if( par == 'body' )
+            {
+                // necessary for correct positioning of modal when modal appended directly to the body element
+                // though I don't really get why !!
+                par = null;
+            }
             var dh = $(document ).outerHeight() + 'px',
                 backdrop = '<div class="jsPanel-backdrop" style="height:' + dh + ';">'+
-                           '<div class="jsPanel-backdrop-inner" style="top:' + $( window ).scrollTop() + 'px;height:' + woH + 'px;"></div></div>';
+                           '<div class="jsPanel-backdrop-inner" style="top:' + winscrollTop() + 'px;height:' + winouterHeight() + 'px;"></div></div>';
             // falls vorhanden backdrop entfernen
             $( '.jsPanel-backdrop' ).remove();
             // backdrop wieder einfügen
@@ -101,7 +117,7 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
             option.position = 'center';
             // reposition wenn window gescrollt wird
             window.onscroll = function(){
-                $( '.jsPanel-backdrop-inner' ).css( 'top', $( window ).scrollTop() + 'px' );
+                $( '.jsPanel-backdrop-inner' ).css( 'top', winscrollTop() + 'px' );
             }
         }
         else if( option.tooltip )
@@ -223,6 +239,26 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
             ]
         }
 
+        /* EXPERIMENTAL RTL Support --------------------------------------------------------------------------------- */
+        if( option.rtl.rtl === true )
+        {
+            $( '.jsPanel-controls', jsPanel ).removeClass( 'navbar-right' );
+            $( '.jsPanel-header, .jsPanel-title, .jsPanel-hdr-tb', jsPanel ).css( 'float', 'right' );
+            $( '.navbar-collapse', jsPanel ).css( 'padding-left', '5px' );
+            $( '.jsPanel-navbar-ftr div ul', jsPanel ).css( 'padding-right', '10px' );
+            $( '.jsPanel-hdr-r-btn-min', jsPanel ).removeClass( 'jsPanel-hdr-r-btn-min' ).addClass( 'jsPanel-hdr-r-btn-close' );
+            $( '.jsPanel-hdr-r-btn-close', jsPanel ).eq(1).removeClass( 'jsPanel-hdr-r-btn-close' ).addClass( 'jsPanel-hdr-r-btn-min' );
+            $( '.jsPanel-hdr-r-btn-close a span', jsPanel ).removeClass( 'glyphicon-minus' ).addClass( 'glyphicon-remove' );
+            $( '.jsPanel-hdr-r-btn-min a span', jsPanel ).removeClass( 'glyphicon-remove' ).addClass( 'glyphicon-minus' );
+            $( '.jsPanel-title, .jsPanel-hdr-tb, .panel-body, .jsPanel-navbar-ftr div ul', jsPanel ).attr( 'dir', 'rtl' );
+        }
+        if( option.rtl.lang )
+        {
+            // enables use of lang attr with option.rtl.rtl = false
+            $( '.jsPanel-title, .jsPanel-hdr-tb, .panel-body, .jsPanel-navbar-ftr div ul', jsPanel ).attr( 'lang', option.rtl.lang );
+        }
+        /* ---------------------------------------------------------------------------------------------------------- */
+
         /* TITLE/HEADER | default: function - (Überschrift) des Panels */
         $( '.jsPanel-title', jsPanel ).append( option.title );
 
@@ -230,6 +266,7 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
         if( option.controls.buttons === 'closeonly' || option.modal )
         {
             $( '.jsPanel-hdr-r-btn-min, .jsPanel-hdr-r-btn-max', jsPanel ).css('display', 'none');
+            $( '.jsPanel-header', jsPanel ).css( 'width', 'calc(100% - 32px)');
         }
         else if( option.controls.buttons === false )
         {
@@ -282,7 +319,7 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
             $( '.jsPanel-content', jsPanel ).addClass( 'jsPanel-content-footer' );
             $( '.jsPanel-ftr', jsPanel ).css( { 'display':'block' } );
             // toolbar Elemente einfügen und konfigurieren
-            configToolbar( option.modal, option.toolbarFooter, '.jsPanel-ftr .navbar-right', jsPanel );
+            configToolbar( option.modal, option.toolbarFooter, '.jsPanel-ftr .navbar-right', jsPanel, option.rtl.rtl );
         }
         else
         {
@@ -555,19 +592,19 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
         /* CSS top, left, bottom, right, z-index des jsPanels setzen */
         if( option.position.top )
         {
-            setCSS( 'top', wsT );
+            setCSS( 'top', winscrollTop() );
         }
         else if( option.position.bottom )
         {
-            setCSS( 'bottom', wsT );
+            setCSS( 'bottom', winscrollTop() );
         }
         if( option.position.left )
         {
-            setCSS( 'left', wsL );
+            setCSS( 'left', winscrollLeft() );
         }
         else if( option.position.right )
         {
-            setCSS( 'right', wsL );
+            setCSS( 'right', winscrollLeft() );
         }
         // set css for top/left/bottom/right
         function setCSS( param, vari ){
@@ -613,21 +650,27 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
         jsPanel.on('click', function(){
             jsPanel.css( 'z-index', set_zi() );
         });
-        // jsPanel schliessen
-        $('.jsPanel-hdr-r-btn-close', jsPanel).on('click', function(e){
-            e.preventDefault(); // important to prevent the window from scrolling back to top
-            jsPanel.close();
-        });
-        // jsPanel minimieren
-        $('.jsPanel-hdr-r-btn-min', jsPanel).on('click', function(e){
-            e.preventDefault();
-            jsPanel.minimize();
-        });
-        // jsPanel maximieren
-        $('.jsPanel-hdr-r-btn-max', jsPanel).on('click', function(e){
-            e.preventDefault();
-            jsPanel.maximize();
-        });
+
+        if( option.controls.buttons != 'closeonly' && option.controls.buttons != false ){
+            // jsPanel minimieren
+            $('.jsPanel-hdr-r-btn-min', jsPanel).on('click', function(e){
+                e.preventDefault();
+                jsPanel.minimize();
+            });
+            // jsPanel maximieren
+            $('.jsPanel-hdr-r-btn-max', jsPanel).on('click', function(e){
+                e.preventDefault();
+                jsPanel.maximize();
+            });
+        }
+        if( option.controls.buttons != false ) {
+            // jsPanel schliessen
+            $( '.jsPanel-hdr-r-btn-close', jsPanel ).on( 'click', function ( e ) {
+                e.preventDefault(); // important to prevent the window from scrolling back to top
+                jsPanel.close();
+            } );
+        }
+
 
 
         /*
@@ -802,11 +845,8 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
 
                 if( par == 'body' )
                 {
-                    // wenn jsPanel im body Element hängt
-                    var wsT = $( window ).scrollTop(),
-                        wsL = $( window ).scrollLeft(),
-                        woH = $( window ).outerHeight();
-                    this.animate( {left: wsL+5+'px' , top: wsT+5+'px' , width: width , height: woH-10+'px' } );
+
+                    this.animate( {left: winscrollLeft()+5+'px' , top: winscrollTop()+5+'px' , width: width , height: winouterHeight()-10+'px' } );
                 }
                 else
                 {
@@ -913,44 +953,47 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
      *
      */
     $.fn.jsPanel.defaults = {
-        "id":               function(){
-                                $(this).first().uniqueId()
-                            },
-        "toolbarHeader":    false,
-        "toolbarFooter":    false,
-        "modal":            false,
-        "tooltip":          false,
-        "content":          false,
-        "load":             false,
-        "ajax":             false,
-        "autoclose":        false,
-        "restoreTo":        false,
-        "header":           true,
-        "position":         'auto',
-        "overflow":         'hidden',
-        "show":             'fadeIn',
-        "title":            function(){
-                                return 'jsPanel No ' + ( $('.jsPanel').length + 1 )
-                            },
-        "controls":         {
-                                buttons:  true,
-                                iconfont: false
-                            },
-        "size":             {
-                                width:  500,
-                                height: 310
-                            },
-        "draggable":        {
-                                handle:      '.navbar',
-                                stack:       '.jsPanel',
-                                opacity:     0.6
-                            },
-        "resizable":        {
-                                handles:        'e, s, w, se, sw',
-                                autoHide:       false,
-                                minWidth:       150,
-                                minHeight:      93
-                            }
+        "ajax":          false,
+        "autoclose":     false,
+        "content":       false,
+        "controls":      {
+                            buttons:  true,
+                            iconfont: false
+                         },
+        "draggable":     {
+                            handle:      '.navbar',
+                            stack:       '.jsPanel',
+                            opacity:     0.6
+                         },
+        "header":        true,
+        "id":            function(){
+                            $(this).first().uniqueId()
+                         },
+        "load":          false,
+        "modal":         false,
+        "overflow":      'hidden',
+        "position":      'auto',
+        "resizable":     {
+                            handles:     'e, s, w, se, sw',
+                            autoHide:    false,
+                            minWidth:    150,
+                            minHeight:   93
+                         },
+        "restoreTo":     false,
+        "rtl":           {
+                            rtl: false
+                         },
+        "show":          'fadeIn',
+        "size":          {
+                            width:  500,
+                            height: 310
+                         },
+        "title":         function(){
+                            return 'jsPanel No ' + ( $('.jsPanel').length + 1 )
+                         },
+        "toolbarFooter": false,
+        "toolbarHeader": false,
+        "tooltip":       false
     };
 
     /*
@@ -969,7 +1012,7 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
     }
 
     // bestückt die Toolbars mit Inhalt
-    function configToolbar( optionModal, optionToolbar, cssToolbar, panel ){
+    function configToolbar( optionModal, optionToolbar, cssToolbar, panel, rtl ){
         if( typeof optionToolbar === 'string' )
         {
             // wenn toolbarFooter ein string ist -> einfügen
@@ -981,12 +1024,16 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
             {
                 if( typeof optionToolbar[i] === 'object' )
                 {
-                    var el = $( optionToolbar[i].item ),                        // Änderung in 1.2.1
-                        type = el.prop('tagName');                              // Änderung in 1.2.1
-                    if( typeof optionModal === 'string' && type == 'BUTTON' )   // Änderung in 1.2.1
+                    var el = $( optionToolbar[i].item ),                        // Änderung in 1.3.0
+                        type = el.prop('tagName');                              // Änderung in 1.3.0
+                    if( typeof optionModal === 'string' && type == 'BUTTON' )   // Änderung in 1.3.0
                     {
                         // set text of button
-                        el.append( optionToolbar[i].btntext );
+                        el.append( '&nbsp;' + optionToolbar[i].btntext );
+                        if( rtl == true || rtl == 'bootstrap-rtl')
+                        {
+                            el.css( 'float', 'left' );
+                        }
                         // add class to button
                         if( typeof optionToolbar[i].btnclass == 'string' ){
                             el.addClass( optionToolbar[i].btnclass );
@@ -1055,13 +1102,13 @@ var jsPanelversion = '1.2.1 2014-05-11 12:45';
 
     /* Templates */
     // for the modal buttons in the footer toolbar
-    var jsPanel_mbtn_ok      = '<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> </button>',
-        jsPanel_mbtn_yes     = '<button type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> </button>',
-        jsPanel_mbtn_no      = '<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> </button>',
-        jsPanel_mbtn_cancel  = '<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> </button>',
-        jsPanel_mbtn_confirm = '<button type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> </button>',
-        jsPanel_mbtn_submit  = '<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> </button>',
-        jsPanel_mbtn_close   = '<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-off"></span> </button>',
-        jsPanel_mbtn_login   = '<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-log-in"></span> </button>';
+    var jsPanel_mbtn_ok      = '<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span></button>',
+        jsPanel_mbtn_yes     = '<button type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span></button>',
+        jsPanel_mbtn_no      = '<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>',
+        jsPanel_mbtn_cancel  = '<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>',
+        jsPanel_mbtn_confirm = '<button type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span></button>',
+        jsPanel_mbtn_submit  = '<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span></button>',
+        jsPanel_mbtn_close   = '<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-off"></span></button>',
+        jsPanel_mbtn_login   = '<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-log-in"></span></button>';
 
 }( jQuery ));
