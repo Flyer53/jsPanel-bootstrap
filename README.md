@@ -1,8 +1,8 @@
 ###NEWS:###
 
-+ 2014-05-13 **jsPanel version 1.3.0 released**: Most important change is the new **option.rtl** that adds support for RTL text direction on individual jsPanels.
++ **jsPanel version 1.4.0 released**
 
-+ Further changes in 1.3.0 are a bugfix in **option.modal** when a modal jsPanel is appended directly to the <code>body</code> element and overall improvements in the code base.
+Version 1.4 incorporates a bunch of changes and improvements. Please see the CHANGELOG.md for details.
 
 ---
 
@@ -16,11 +16,11 @@ Copyright &copy; 2014 Stefan Sträßer | [stefanstraesser.eu](http://stefanstrae
 
 ![jsPanel jQuery Plugin](https://github.com/Flyer53/jsPanel-bootstrap/raw/master/jsPanel-bootstrap.jpg)
 
-| options          | methods            | events           | callback            |
-| ---------------- | ------------------ | ---------------- | ------------------- |
-| ajax             | close()            | onjspanelclosed  | function( jsPanel ) |
-| autoclose        | closeChildpanels() | onjspanelloaded  |                     |
-| content          | front()            |                  |                     |
+| options          | methods            | events           | callback            | properties    |
+| ---------------- | ------------------ | ---------------- | ------------------- | ------------- |
+| ajax             | close()            | onjspanelclosed  | function( jsPanel ) | content       |
+| autoclose        | closeChildpanels() | onjspanelloaded  |                     |               |
+| content          | front()            |                  |                     |               |
 | draggable        | maximize()         |                  |                     |
 | header           | minimize()         |                  |                     |
 | id               | title()            |                  |                     |

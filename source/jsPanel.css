@@ -15,7 +15,7 @@
     border-radius: 4px 4px 0 0;
     cursor: move;
     margin-bottom: 0;
-    min-height: 40px;
+    min-height: 30px;
 }
 .jsPanel-header{
     width: calc(100% - 70px);
@@ -47,16 +47,24 @@
     position: relative;
     padding: 15px;
 }
-.jsPanel-content-default{
+
+.jsPanel-resize0 { height: calc( 100% ); }
+.jsPanel-resize30{
+    height: calc(100% - 30px);  /* has to be adjusted according to .jsPanel-hdr height */
+}
+.jsPanel-resize32{
+    height: calc(100% - 32px);  /* has to be adjusted according to .jsPanel-hdr height */
+}
+.jsPanel-resize40{
     height: calc(100% - 40px);  /* has to be adjusted according to .jsPanel-hdr height */
 }
-.jsPanel-content-header{
+.jsPanel-resize52{
     height: calc(100% - 52px); /* has to be adjusted according to .jsPanel-hdr height + header toolbar */
 }
-.jsPanel-content-footer{
-    height: calc(100% - 80px);   /* has to be adjusted according to .jsPanel-hdr & footer toolbar */
+.jsPanel-resize72{
+    height: calc(100% - 72px);   /* has to be adjusted according to .jsPanel-hdr & footer toolbar */
 }
-.jsPanel-content-header.jsPanel-content-footer{
+.jsPanel-resize92{
     height: calc(100% - 92px);   /* has to be adjusted according to .jsPanel-hdr & header toolbar & footer toolbar  */
 }
 .ui-icon, .ui-widget-content .ui-icon {
@@ -80,10 +88,12 @@
 /* footer has always standard default styling */
 .jsPanel-ftr .navbar,
 .jsPanel-ftr .navbar-default {
+    min-height: 40px;
     background-color: #f8f8f8;
     background-image: none;
     border-color: #e7e7e7;
     border-radius: 0;
+    padding-bottom: 3px;
     padding-top: 5px;
 }
 .jsPanel-ftr .navbar-default .navbar-brand {

@@ -1,5 +1,5 @@
 /* jQuery Plugin jsPanel for bootstrap
-   Version: 1.3.0 2014-05-13 11:00
+   Version: 1.4.0 2014-05-26 10:18
    Dependencies:
     jQuery library ( > 1.7.0 incl. 2.1.0 )
     jQuery.UI library ( > 1.9.0 ) - (at least UI Core, Mouse, Widget, Draggable, Resizable)
@@ -20,24 +20,22 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-var jsPanelversion = '1.3.0 2014-05-13 11:00';
-
-// + Integration of RTL text direction
-// + window properties derived through functions, not variables
-// + bugfix in option.modal when modal is appended directly to the body element
+var jsPanelversion = '1.4.0 2014-05-26 10:18';
 
 (function ( $ ) {
 
     $.fn.jsPanel = function( config , callback ) {
 
-        // unbind all handlers for the "DOMNodeRemoved" event
-        // will be bound again after jsPanel is visible in the document
-        $( "body" ).unbind( "DOMNodeRemoved" );
-
         // tagname des elements an das das jsPanel gehängt wird und window Daten
         // this is the collection on which .jsPanel() is called
-        var par = this.first()[0].tagName.toLowerCase();
-
+        try
+        {
+            var par = this.first()[0].tagName.toLowerCase();
+        }
+        catch ( e )
+        {
+            console.log( e + '\nThe element you want to append the jsPanel to does not exist!' );
+        }
         function winscrollTop(){
             return $( window ).scrollTop();
         }
@@ -46,6 +44,9 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
         }
         function winouterHeight(){
             return $( window ).outerHeight();
+        }
+        function docouterHeight(){
+            return $(document ).outerHeight();
         }
 
         // Extend our default config with those provided.
@@ -72,7 +73,7 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
                                 '</div><!-- /.navbar-collapse -->'+
                                 '<div class="jsPanel-hdr-tb"></div><!-- extra header toolbar -->'+
                             '</nav>'+
-                            '<div class="jsPanel-content jsPanel-content-default panel panel-default">'+
+                            '<div class="jsPanel-content jsPanel-resize32 panel panel-default">'+
                                 '<div class="panel-body"></div>'+
                             '</div>'+
                             '<div class="jsPanel-ftr" style="display:none;">'+
@@ -110,22 +111,51 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             $( 'body' ).append( backdrop );
             // jsPanel in backdrop einfügen
             jsPanel.appendTo( $( '.jsPanel-backdrop-inner' ) );
-            // draggable und resizable deaktivieren
-            option.draggable = 'disabled';
-            option.resizable = 'disabled';
             // jsPanel auf jeden Fall centern
             option.position = 'center';
+            commons_MTA( option, jsPanel, 'closeonly' );
             // reposition wenn window gescrollt wird
             window.onscroll = function(){
                 $( '.jsPanel-backdrop-inner' ).css( 'top', winscrollTop() + 'px' );
             }
+            // various presets for option.modal
+            if( option.modal == 'modal-ok' )
+            {
+                option.toolbarFooter = [
+                    {
+                        item:     jsPanel_mbtn_ok,                      // button to use
+                        btntext:  option.toolbarFooter[0].buttontext,   // buttontext
+                        btnclass: option.toolbarFooter[0].buttonclass,  // classname to add to the button
+                        event:    'click',
+                        callback: option.toolbarFooter[0].callback
+                    }
+                ]
+            }
+            else if( option.modal == 'modal-yesno' )
+            {
+                option.toolbarFooter = [
+                    { item: jsPanel_mbtn_yes, btntext: option.toolbarFooter[0].buttontext, btnclass: option.toolbarFooter[0].buttonclass, event: 'click', callback: option.toolbarFooter[0].callback },
+                    { item: jsPanel_mbtn_no,  btntext: option.toolbarFooter[1].buttontext, btnclass: option.toolbarFooter[1].buttonclass, event: 'click', callback: option.toolbarFooter[1].callback }
+                ]
+            }
+            else if( option.modal == 'modal-confirm' )
+            {
+                option.toolbarFooter = [
+                    { item: jsPanel_mbtn_confirm, btntext: option.toolbarFooter[0].buttontext, btnclass: option.toolbarFooter[0].buttonclass, event: 'click', callback: option.toolbarFooter[0].callback },
+                    { item: jsPanel_mbtn_cancel,  btntext: option.toolbarFooter[1].buttontext, btnclass: option.toolbarFooter[1].buttonclass, event: 'click', callback: option.toolbarFooter[1].callback }
+                ]
+            }
+            else if( option.modal == 'modal-submit' )
+            {
+                option.toolbarFooter = [
+                    { item: jsPanel_mbtn_submit, btntext: option.toolbarFooter[0].buttontext, btnclass: option.toolbarFooter[0].buttonclass, event: 'click', callback: option.toolbarFooter[0].callback },
+                    { item: jsPanel_mbtn_cancel, btntext: option.toolbarFooter[1].buttontext, btnclass: option.toolbarFooter[1].buttonclass, event: 'click', callback: option.toolbarFooter[1].callback }
+                ]
+            }
         }
         else if( option.tooltip )
         {
-            // draggable & resizable NICHT inizialisieren, nur close button einblenden
-            option.resizable = false;
-            option.draggable = false;
-            option.controls.buttons = 'closeonly';
+            commons_MTA( option, jsPanel, 'closeonly' );
             // cursor zurücksetzen, weil draggable deaktiviert
             $('.navbar', jsPanel ).css( 'cursor', 'inherit' );
 
@@ -204,52 +234,17 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             jsPanel.appendTo( this.first() );
         }
 
-        // various presets for option.modal
-        if( option.modal == 'modal-ok' )
-        {
-            option.toolbarFooter = [
-                {
-                    item:     jsPanel_mbtn_ok,                      // button to use
-                    btntext:  option.toolbarFooter[0].buttontext,   // buttontext
-                    btnclass: option.toolbarFooter[0].buttonclass,  // classname to add to the button
-                    event:    'click',
-                    callback: option.toolbarFooter[0].callback
-                }
-            ]
-        }
-        else if( option.modal == 'modal-yesno' )
-        {
-            option.toolbarFooter = [
-                { item: jsPanel_mbtn_yes, btntext: option.toolbarFooter[0].buttontext, btnclass: option.toolbarFooter[0].buttonclass, event: 'click', callback: option.toolbarFooter[0].callback },
-                { item: jsPanel_mbtn_no,  btntext: option.toolbarFooter[1].buttontext, btnclass: option.toolbarFooter[1].buttonclass, event: 'click', callback: option.toolbarFooter[1].callback }
-            ]
-        }
-        else if( option.modal == 'modal-confirm' )
-        {
-            option.toolbarFooter = [
-                { item: jsPanel_mbtn_confirm, btntext: option.toolbarFooter[0].buttontext, btnclass: option.toolbarFooter[0].buttonclass, event: 'click', callback: option.toolbarFooter[0].callback },
-                { item: jsPanel_mbtn_cancel,  btntext: option.toolbarFooter[1].buttontext, btnclass: option.toolbarFooter[1].buttonclass, event: 'click', callback: option.toolbarFooter[1].callback }
-            ]
-        }
-        else if( option.modal == 'modal-submit' )
-        {
-            option.toolbarFooter = [
-                { item: jsPanel_mbtn_submit, btntext: option.toolbarFooter[0].buttontext, btnclass: option.toolbarFooter[0].buttonclass, event: 'click', callback: option.toolbarFooter[0].callback },
-                { item: jsPanel_mbtn_cancel, btntext: option.toolbarFooter[1].buttontext, btnclass: option.toolbarFooter[1].buttonclass, event: 'click', callback: option.toolbarFooter[1].callback }
-            ]
-        }
-
-        /* EXPERIMENTAL RTL Support --------------------------------------------------------------------------------- */
+        /* EXPERIMENTAL option.rtl ---------------------------------------------------------------------------------- */
         if( option.rtl.rtl === true )
         {
             $( '.jsPanel-controls', jsPanel ).removeClass( 'navbar-right' );
             $( '.jsPanel-header, .jsPanel-title, .jsPanel-hdr-tb', jsPanel ).css( 'float', 'right' );
             $( '.navbar-collapse', jsPanel ).css( 'padding-left', '5px' );
             $( '.jsPanel-navbar-ftr div ul', jsPanel ).css( 'padding-right', '10px' );
-            $( '.jsPanel-hdr-r-btn-min', jsPanel ).removeClass( 'jsPanel-hdr-r-btn-min' ).addClass( 'jsPanel-hdr-r-btn-close' );
-            $( '.jsPanel-hdr-r-btn-close', jsPanel ).eq(1).removeClass( 'jsPanel-hdr-r-btn-close' ).addClass( 'jsPanel-hdr-r-btn-min' );
-            $( '.jsPanel-hdr-r-btn-close a span', jsPanel ).removeClass( 'glyphicon-minus' ).addClass( 'glyphicon-remove' );
-            $( '.jsPanel-hdr-r-btn-min a span', jsPanel ).removeClass( 'glyphicon-remove' ).addClass( 'glyphicon-minus' );
+            $( '.jsPanel-hdr-r-btn-min', jsPanel ).alterClass( 'jsPanel-hdr-r-btn-min', 'jsPanel-hdr-r-btn-close' );
+            $( '.jsPanel-hdr-r-btn-close', jsPanel ).eq(1).alterClass( 'jsPanel-hdr-r-btn-close', 'jsPanel-hdr-r-btn-min' );
+            $( '.jsPanel-hdr-r-btn-close a span', jsPanel ).alterClass( 'glyphicon-minus', 'glyphicon-remove' );
+            $( '.jsPanel-hdr-r-btn-min a span', jsPanel ).alterClass( 'glyphicon-remove', 'glyphicon-minus' );
             $( '.jsPanel-title, .jsPanel-hdr-tb, .panel-body, .jsPanel-navbar-ftr div ul', jsPanel ).attr( 'dir', 'rtl' );
         }
         if( option.rtl.lang )
@@ -259,21 +254,10 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
         }
         /* ---------------------------------------------------------------------------------------------------------- */
 
-        /* TITLE/HEADER | default: function - (Überschrift) des Panels */
+        /* option.title | default: function - (Überschrift) des Panels */
         $( '.jsPanel-title', jsPanel ).append( option.title );
 
-        /* CONTROLS (buttons in header right) | default: object */
-        if( option.controls.buttons === 'closeonly' || option.modal )
-        {
-            $( '.jsPanel-hdr-r-btn-min, .jsPanel-hdr-r-btn-max', jsPanel ).css('display', 'none');
-            $( '.jsPanel-header', jsPanel ).css( 'width', 'calc(100% - 32px)');
-        }
-        else if( option.controls.buttons === false )
-        {
-            $( '.jsPanel-hdr-r-btn-min, .jsPanel-hdr-r-btn-max, .jsPanel-hdr-r-btn-close', jsPanel ).css('display', 'none');
-        }
-
-        /* ATTRIBUT ID DES PANELS | default: false */
+        /* option.id | default: false */
         // wenn option.id -> string oder function?
         if( typeof option.id === 'string' )
         {
@@ -287,7 +271,7 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
                 jsPanel.uniqueId();
                 // neue id als Hinweis in den title schreiben
                 var txt = $('.jsPanel-title', jsPanel).html();
-                $('.jsPanel-title', jsPanel).html( txt + ' AUTOMATIC ID: ' + jsPanel.attr('id') );
+                $('.jsPanel-title', jsPanel).html( txt + ' AUTO-ID: ' + jsPanel.attr('id') );
             }
         }
         else if( $.isFunction( option.id ) )
@@ -295,38 +279,7 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             jsPanel.attr( 'id', option.id );
         }
 
-        /* OVERFLOW DES JSPANEL-CONTENTS  | default: 'scroll' */
-        if( typeof option.overflow === 'string' )
-        {
-            $( '.jsPanel-content.panel .panel-body', jsPanel ).css( 'overflow', option.overflow );
-        }
-        else if ( $.isPlainObject( option.overflow ) )
-        {
-            $( '.jsPanel-content.panel .panel-body', jsPanel ).css( { 'overflow-y':option.overflow.vertical, 'overflow-x':option.overflow.horizontal } );
-        }
-
-        /* TOOLBAR im Header aktivieren | default: false */
-        if( option.toolbarHeader && option.header == true )
-        {
-            $( '.jsPanel-content', jsPanel ).addClass( 'jsPanel-content-header' );
-            $( '.jsPanel-hdr-tb', jsPanel ).css( 'display', 'block' );
-            configToolbar(  option.modal, option.toolbarHeader, '.jsPanel-hdr-tb', jsPanel );
-        }
-
-        /* TOOLBAR im Footer aktivieren | default: false */
-        if( option.toolbarFooter )
-        {
-            $( '.jsPanel-content', jsPanel ).addClass( 'jsPanel-content-footer' );
-            $( '.jsPanel-ftr', jsPanel ).css( { 'display':'block' } );
-            // toolbar Elemente einfügen und konfigurieren
-            configToolbar( option.modal, option.toolbarFooter, '.jsPanel-ftr .navbar-right', jsPanel, option.rtl.rtl );
-        }
-        else
-        {
-            $( '.jsPanel-ftr', jsPanel ).remove();
-        }
-
-        /* option.header EXPERIMENTAL and */
+        /* option.header */
         if( option.header == false )
         {
             // remove complete header section
@@ -334,16 +287,25 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             // CSS corrections for various combinations of header/header toolbar and footer toolbar when header = false
             if( !option.toolbarFooter )
             {
-                // if no toolbarFooter is configured
-                $( '.jsPanel-content', jsPanel ).removeClass( 'jsPanel-content-default' );
+                // if no toolbarFooter is configured and therefore no toolbar at all
+                $( '.jsPanel-content', jsPanel ).alterClass( 'jsPanel-resize*', '' );
             }
             else if( option.toolbarFooter )
             {
                 // if toolbarFooter is configured
-                $( '.jsPanel-content', jsPanel ).removeClass( 'jsPanel-content-footer' );
+                $( '.jsPanel-content', jsPanel ).alterClass( 'jsPanel-resize*', 'jsPanel-resize40' );
             }
         }
-
+        /* option.controls (buttons in header right) | default: object */
+        if( option.controls.buttons === 'closeonly' || option.modal )
+        {
+            $( '.jsPanel-hdr-r-btn-min, .jsPanel-hdr-r-btn-max', jsPanel ).css('display', 'none');
+            $( '.jsPanel-header', jsPanel ).css( 'width', 'calc(100% - 32px)');
+        }
+        else if( option.controls.buttons === false )
+        {
+            $( '.jsPanel-hdr-r-btn-min, .jsPanel-hdr-r-btn-max, .jsPanel-hdr-r-btn-close', jsPanel ).css('display', 'none');
+        }
         /* font-awesome | bootstrap iconfonts einfügen wenn option.iconfont gesetzt */
         if( option.controls.iconfont )
         {
@@ -355,10 +317,54 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             }
         }
 
-        /* JQUERY UI DRAGGABLE FEATURE*/
+        /* option.toolbarHeader | default: false */
+        if( option.toolbarHeader && option.header == true )
+        {
+            $( '.jsPanel-content', jsPanel ).alterClass( 'jsPanel-resize*', 'jsPanel-resize52' );
+            $( '.jsPanel-hdr-tb', jsPanel ).css( 'display', 'block' );
+            configToolbar(  option.modal, option.toolbarHeader, '.jsPanel-hdr-tb', jsPanel );
+        }
+
+        /* option.toolbarFooter | default: false */
+        if( option.toolbarFooter )
+        {
+            $( '.jsPanel-content', jsPanel ).alterClass( 'jsPanel-resize*', 'jsPanel-resize72' );
+            $( '.jsPanel-ftr', jsPanel ).css( { 'display':'block' } );
+            // toolbar Elemente einfügen und konfigurieren
+            configToolbar( option.modal, option.toolbarFooter, '.jsPanel-ftr .navbar-right', jsPanel, option.rtl.rtl );
+            if( option.toolbarHeader && option.header == true )
+            {
+                $( '.jsPanel-content', jsPanel ).alterClass( 'jsPanel-resize*', 'jsPanel-resize92' );
+            }
+            else if( option.header == false )
+            {
+                $( '.jsPanel-content', jsPanel ).alterClass( 'jsPanel-resize*', 'jsPanel-resize40' );
+            }
+        }
+        else
+        {
+            $( '.jsPanel-ftr', jsPanel ).remove();
+        }
+
+        /* option.overflow  | default: 'scroll' */
+        if( typeof option.overflow === 'string' )
+        {
+            $( '.jsPanel-content.panel .panel-body', jsPanel ).css( 'overflow', option.overflow );
+        }
+        else if ( $.isPlainObject( option.overflow ) )
+        {
+            $( '.jsPanel-content.panel .panel-body', jsPanel ).css( { 'overflow-y':option.overflow.vertical, 'overflow-x':option.overflow.horizontal } );
+        }
+
+        /* option.draggable */
         // default-config für draggable steht in $.fn.jsPanel.defaults.draggable
         if( $.isPlainObject( option.draggable ) )
         {
+            // wenn jsPanel ein childpanel ist ...
+            if( jsPanel.parent().hasClass('jsPanel-content') )
+            {
+                option.draggable.containment = 'parent';
+            }
             option.customdraggable = $.extend( true, {}, $.fn.jsPanel.defaults.draggable, option.draggable );
             jsPanel.draggable( option.customdraggable );
         }
@@ -370,7 +376,7 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             jsPanel.draggable({ disabled: true });
         }
 
-        /* JQUERY UI RESIZABLE FEATURE */
+        /* option.resizable */
         // default-config für resizable steht in $.fn.jsPanel.defaults.resizable
         if( $.isPlainObject( option.resizable ) )
         {
@@ -383,22 +389,11 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             jsPanel.resizable({ disabled: true });
         }
 
-        /* JSPANEL AUTOCLOSE | default: false */
-        if( typeof option.autoclose == 'number' && option.autoclose > 0 )
-        {
-            window.setTimeout( function(){
-                jsPanel.fadeOut('slow', function(){
-                    this.remove();
-                });
-            }, option.autoclose )
-        }
-
-        /* INHALT DES PANELS | default: false */
-        /* CONTENT */
+        /* option.content */
         // option.content kann auch eine Funktion (auch IIFE) oder ein jQuery Objekt sein, die den Inhalt zurückliefert
         $( '.jsPanel-content.panel .panel-body' , jsPanel ).append( option.content );
 
-        /* LOAD */
+        /* option.load */
         if( $.isPlainObject( option.load ) && option.load.url )
         {
             if( !option.load.data ){
@@ -414,7 +409,7 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             $( '.jsPanel-content.panel .panel-body' , jsPanel ).empty().load( option.load.url, option.load.data, func );
         }
 
-        /* AJAX */
+        /* option.ajax */
         if( $.isPlainObject( option.ajax ) )
         {
             $.ajax( option.ajax )
@@ -453,7 +448,17 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             )
         }
 
-        /* option.size | default: { width: 500, height: 310 } */
+        /* option.autoclose | default: false */
+        if( typeof option.autoclose == 'number' && option.autoclose > 0 )
+        {
+            var id = jsPanel.attr('id');
+            window.setTimeout( function(){
+                // func autoclose prüft erst ob es das el noch gibt
+                autoclose( jsPanel, id );
+            }, option.autoclose )
+        }
+
+        /* option.size | default: { width: 400, height: 222 } */
         if( typeof option.size === 'string' && option.size == 'auto' )
         {
             option.size = { width: 'auto', height: 'auto' }
@@ -484,16 +489,45 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             }
             else if( $.isNumeric( option.size[param] ) )
             {
-                option.size[param] = option.size[param] + 'px';
+                option.size[param] = option.size[param];
             }
             else
             {
                 option.size.height = $.fn.jsPanel.defaults.size[param];
             }
         }
+        // set class for jsPanel-content depending on present header/toolbars
+        // and adjust header height if necessary
+        if( option.header == false && !option.toolbarFooter ) // kein header, keine toolbars
+        {
+            $('.jsPanel-content', jsPanel).alterClass( 'jsPanel-resize*', 'jsPanel-resize0' );
+        }
+        else if( option.header && !option.toolbarHeader && !option.toolbarFooter ) // header, aber keine toolbars
+        {
+            $('.jsPanel-content', jsPanel).alterClass( 'jsPanel-resize*', 'jsPanel-resize32' );
+        }
+        else if( option.header && option.toolbarHeader && !option.toolbarFooter ) // header + toolbarHeader, kein toolbarFooter
+        {
+            $('.jsPanel-content', jsPanel).alterClass( 'jsPanel-resize*', 'jsPanel-resize52' );
+            $('.jsPanel-navbar-hdr', jsPanel ).css('height', '52px');
+        }
+        else if( option.header == false && !option.toolbarHeader && option.toolbarFooter ) // nur toolbarFooter
+        {
+            $('.jsPanel-content', jsPanel).alterClass( 'jsPanel-resize*', 'jsPanel-resize40' );
+        }
+        else if( option.header && !option.toolbarHeader && option.toolbarFooter ) // header + toolbarFooter, kein toolbarHeader
+        {
+            $('.jsPanel-content', jsPanel).alterClass( 'jsPanel-resize*', 'jsPanel-resize72' );
+        }
+        else if( option.header && option.toolbarHeader && option.toolbarFooter ) // header + toolbarHeader + toolbarFooter
+        {
+            $('.jsPanel-content', jsPanel).alterClass( 'jsPanel-resize*', 'jsPanel-resize92' );
+            $('.jsPanel-navbar-hdr', jsPanel ).css('height', '52px');
+        }
+
 
         /* css width & height des jsPanels setzen (ist hier erforderlich wenn manuell width & height gesetzt wurde) */
-        jsPanel.css( { width: option.size.width, height: option.size.height } );
+        jsPanel.css( { width: option.size.width, height: option.size.height + 32 + 'px' } );
 
         /* der folgende code block ermöglicht 'center' für top & left auch dann, wenn width und/oder height 'auto' sind */
         option.size.width = $( jsPanel ).outerWidth();
@@ -672,6 +706,13 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
         }
 
 
+        /*
+         * jsPanel properties ----------------------------------------------------
+         */
+        // define jsPanel property with panel content
+        jsPanel.content = $( '.jsPanel-content.panel .panel-body' , jsPanel );
+
+
 
         /*
          * METHODEN DES JSPANEL-OBJEKTS
@@ -721,6 +762,10 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             }
             // remove the jsPanel itself
             this.remove();
+
+            var panelID = jsPanel.attr('id');
+            $('body' ).trigger( 'onjspanelclosed', panelID );
+
             // backdrop entfernen
             $( '.jsPanel-backdrop' ).remove();
             // die minimierten Panels repositionieren
@@ -735,10 +780,10 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
         // childpanels des jspanels löschen
         jsPanel.closeChildpanels = function()
         {
-            var childpanels = $( '.jsPanel', this );
-            childpanels.each(function( index ){
-                var id = $(this).attr('id');
+            $( '.jsPanel', this ).each(function(){
+                var pID = $(this).attr('id');
                 this.remove();
+                $('body' ).trigger( 'onjspanelclosed', pID );
             });
             return this;
         };
@@ -753,9 +798,6 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
         // jsPanel Minimieren und Maximieren
         jsPanel.minimize = function()
         {
-            // unbind necessary -> event 'onjspanelclosed' would fire
-            $( "body" ).unbind( "DOMNodeRemoved" );
-
             if( $( '#jsPanel-min-container' ).length == 0 )
             {
                 // wenn der Container für die minimierten jsPanels noch nicht existiert ->
@@ -773,8 +815,7 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
                 var count =  $( '.jsPanel.minimized' ).length,
                     left = ( ( count ) * 150 ) + 'px';
                 // jsPanel bearbeiten
-                this.removeClass( 'normalized maximized' )
-                    .addClass( 'minimized' )
+                this.alterClass( 'normalized maximized', 'minimized' )
                     .animate( { width:'150px' , height:'26px' , left:left , top:0 , opacity:1 , zIndex:1000 } );
                 // jquery ui resizable und draggable bei Bedarf deaktivieren
                 if( jsPanel.resizable( "option", "disabled" ) === false )
@@ -788,17 +829,12 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
                 // jsPanel in vorgesehenen Container verschieben
                 jsPanel.appendTo( '#jsPanel-min-container' );
             }
-            // enable 'onjspanelclosed' again
-            bindRemoveEvent();
 
             return this;
         };
 
         jsPanel.maximize = function()
         {
-            // unbind necessary -> event 'onjspanelclosed' would fire
-            $( "body" ).unbind( "DOMNodeRemoved" );
-
             if ( !this.hasClass('normalized') )
             {
                 // jsPanel wieder in den Ursprungscontainer verschieben
@@ -825,7 +861,7 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
                         height: this.data( 'panelHeight' )
                     });
                 }
-                this.removeClass('minimized maximized').addClass('normalized');
+                this.alterClass( 'minimized maximized', 'normalized' );
             }
             else
             {
@@ -853,8 +889,7 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
                     // sonst
                     this.animate( {left: '5px' , top: '5px' , width: width , height: height} );
                 }
-                this.removeClass( 'minimized normalized' )
-                    .addClass( 'maximized' );
+                this.alterClass( 'minimized normalized', 'maximized' );
             }
             this.resizable( "enable" ).draggable( "enable" );
 
@@ -864,8 +899,6 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
                 var left = (i * 150) + 'px';
                 $('.jsPanel.minimized').eq(i).animate({left: left});
             }
-            // enable 'onjspanelclosed' again
-            bindRemoveEvent();
 
             return this;
         };
@@ -873,11 +906,13 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
         // Speichert CSS-Werte in data-Property des jsPanels
         jsPanel.storeData = function( panel )
         {
-            panel.data( 'panelWidth', panel.css( 'width' ) );
-            panel.data( 'panelHeight', panel.css( 'height' ) );
-            panel.data( 'panelTop', panel.css( 'top' ) );
-            panel.data( 'panelLeft', panel.css( 'left' ) );
-            panel.data( 'parentElement', panel.parent() );
+            panel.data({
+                'panelWidth':    panel.css( 'width' ),
+                'panelHeight':   panel.css( 'height' ),
+                'panelTop':      panel.css( 'top' ),
+                'panelLeft':     panel.css( 'left' ),
+                'parentElement': panel.parent()
+            });
         };
 
 
@@ -892,22 +927,16 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             jsPanel[anim](function(){
                 // trigger custom event
                 $( jsPanel ).trigger( 'onjspanelloaded', jsPanel.attr('id') );
-                // binds the DOMNodeRemoved event and prepares to trigger 'onjspanelclosed'
-                bindRemoveEvent();
             });
         }
         else
         {
             // sonst wird es als css animation interpretiert und die class gesetzt
             // does not work with certain combinations of type of animation and positioning
-            jsPanel.css( { display:'block', opacity: 1 } );
-            jsPanel.addClass( option.show );
-            $( jsPanel ).trigger( 'onjspanelloaded', jsPanel.attr('id') );
-            bindRemoveEvent();
+            jsPanel.css( { display:'block', opacity: 1 } )
+                   .addClass( option.show )
+                   .trigger( 'onjspanelloaded', jsPanel.attr('id') );
         }
-        // Example Code for application as put in api.js:
-        //$('body').on( 'onjspanelloaded', function(event, jsPanelID){ console.log( 'jsPanel added with ID: ' + jsPanelID ) });
-        //$('body').on( 'onjspanelclosed', function(event, jsPanelID){ console.log( 'Node removed ID: ' + jsPanelID ) });
 
 
         /* css bottom und/oder right in top und left wandeln */
@@ -985,8 +1014,8 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
                          },
         "show":          'fadeIn',
         "size":          {
-                            width:  500,
-                            height: 310
+                            width:  400,
+                            height: 222
                          },
         "title":         function(){
                             return 'jsPanel No ' + ( $('.jsPanel').length + 1 )
@@ -1009,6 +1038,15 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
             }
         });
         return zi + 1;
+    }
+
+    // common settings for modal, tooltip, alert
+    function commons_MTA( option, jsPanel, controls ){
+        // draggable & resizable NICHT inizialisieren, nur close button einblenden, cursor
+        option.resizable = false;
+        option.draggable = false;
+        option.controls.buttons = controls;
+        $('.jsPanel-hdr, .jsPanel-hdr-l, .jsPanel-ftr', jsPanel ).css( 'cursor', 'default' );
     }
 
     // bestückt die Toolbars mit Inhalt
@@ -1050,19 +1088,16 @@ var jsPanelversion = '1.3.0 2014-05-13 11:00';
         }
     }
 
-    // binds the DOMNOdeRemoved event and triggers 'onjspanelclosed'
-    function bindRemoveEvent(){
-        $( "body" ).bind(
-            "DOMNodeRemoved",
-            function( objEvent ){
-                if( $( objEvent.target ).hasClass('jsPanel') )
-                {
-                    var panelID = $( objEvent.target ).attr('id');
-                    $('body' ).trigger( 'onjspanelclosed', panelID );
-                }
-            }
-        );
+    // wird in option.autoclose verwendet und prüft vor Anwendung von .close() ob es das jsPanel überhaupt noch gibt
+    function autoclose( jsPanel, id ){
+        var elmt = $('#' + id );
+        if( elmt ){
+            elmt.fadeOut('slow', function(){
+                jsPanel.close(); // elmt geht hier nicht weil .close() nicht für elmt definiert ist
+            });
+        }
     }
+
 
     /*
      * jQuery alterClass plugin
