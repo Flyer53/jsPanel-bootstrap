@@ -4,11 +4,6 @@
 
 ---
 
-**Preview of coming jsPanel version 2 is available here: [http://jspanel.de/beta/api.html](http://jspanel.de/beta/api.html)**
-
-With the coming jsPanel version 2 this extra version jsPanel-bootstrap will be obsolete. Bootstrap support will be provided by jsPanel version 2 via a new **option.bootstrap** in combination with option.theme.
-See the beta page for a lot of other improvements.
-
 + **jsPanel version 1.4.0 released**
 
 Version 1.4 incorporates a bunch of changes and improvements. Please see the CHANGELOG.md for details.
