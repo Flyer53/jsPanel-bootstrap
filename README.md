@@ -1,10 +1,10 @@
 ###NEWS:###
 
-** With the release of jsPanel version 2 this extra bootstrap version is more or less obsolete since jsPanel version 2 has bootstrap support built in!**
+**With the release of jsPanel version 2 this extra bootstrap version is more or less obsolete since jsPanel version 2 has bootstrap support built in!**
 
 ---
 
-+ **jsPanel version 1.4.0 released**
++ **jsPanel-bootstrap version 1.4.0 released**
 
 Version 1.4 incorporates a bunch of changes and improvements. Please see the CHANGELOG.md for details.
 
