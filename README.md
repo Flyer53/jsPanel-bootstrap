@@ -1,5 +1,9 @@
 ###NEWS:###
 
+** With the release of jsPanel version 2 this extra bootstrap version is more or less obsolete since jsPanel version 2 has bootstrap support built in!**
+
+---
+
 **Preview of coming jsPanel version 2 is available here: [http://jspanel.de/beta/api.html](http://jspanel.de/beta/api.html)**
 
 With the coming jsPanel version 2 this extra version jsPanel-bootstrap will be obsolete. Bootstrap support will be provided by jsPanel version 2 via a new **option.bootstrap** in combination with option.theme.
