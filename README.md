@@ -1,6 +1,6 @@
 **With the release of jsPanel version 2 this extra bootstrap version is more or less obsolete since jsPanel version 2 has bootstrap support built in!**
 
-**This jsPanel version is not maintained anymore!**
+**jsPanel-bootstrap is not maintained anymore!**
 
 ---
 
